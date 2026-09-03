@@ -83,10 +83,10 @@ Inicio
 | Lenguaje | Dart | Lógica, pantallas, navegación y formularios |
 | Autenticación | Firebase Authentication | Registro e inicio de sesión del personal de salud |
 | Base de datos | Cloud Firestore | Almacenamiento de usuarios e historias clínicas |
-| Nube | Firebase / Google Cloud | Servicios de autenticación, datos y sincronización |
+| Nube | Firebase | Servicios de autenticación, datos y sincronización |
 | Seguridad | Firebase Security Rules | Reglas básicas de lectura y escritura de datos |
 | Control de versiones | Git y GitHub | Trabajo colaborativo y administración del código fuente |
-| Diseño | Figma o Canva | Bocetos y prototipos de las interfaces |
+| Diseño | Canva | Bocetos y prototipos de las interfaces |
 | Desarrollo | Visual Studio Code o Android Studio | Programación y pruebas de la aplicación |
 
 Se eligió Flutter con Firebase porque permite desarrollar una aplicación móvil y conectar autenticación y base de datos en la nube sin construir inicialmente un servidor propio.
@@ -132,9 +132,7 @@ Ejemplo de una historia clínica:
   "documentoPaciente": "1234567890",
   "motivoConsulta": "Dolor de cabeza frecuente",
   "observaciones": "El paciente informa dolor durante los últimos tres días.",
-  "diagnostico": "Cefalea",
-  "fechaCreacion": "2026-09-03T15:50:00",
-  "idPersonalSalud": "usuarioFirebase123"
+  "diagnostico": "Cefalea"
 }
 ```
 
@@ -157,4 +155,4 @@ La consulta del paciente por número de documento se incluye únicamente para de
 
 ## Equipo
 
-Proyecto desarrollado para la actividad **Diseño Arquitectónico y Modelado de Soluciones Móviles**.
+Proyecto desarrollado para la materia **Mobile And Cloud Computing**.
