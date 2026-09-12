@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">MediHIS</string>
+    <string name="title_activity_main">MediHIS</string>
+    <string name="package_name">com.medihis.app</string>
+    <string name="custom_url_scheme">com.medihis.app</string>
+</resources>

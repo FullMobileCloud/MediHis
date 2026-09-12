@@ -1,0 +1,15 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Permitir lectura y escritura de perfiles de personal de salud
+    match /staffUsers/{userId} {
+      allow read, write: if true;
+    }
+    
+    // Permitir registro de historias por el personal y consulta por pacientes
+    match /clinicalRecords/{recordId} {
+      allow read, write: if true;
+    }
+  }
+}
+
