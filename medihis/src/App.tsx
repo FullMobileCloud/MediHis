@@ -1,4 +1,16 @@
 import { useState, useEffect } from "react";
+import type { ClinicalRecord } from "./models/ClinicalRecord";
+import type { StaffUser } from "./models/StaffUser";
+import { HomeView } from "./views/HomeView";
+import { StaffAuthView } from "./views/StaffAuthView";
+import { StaffDashboardView } from "./views/StaffDashboardView";
+import { StaffPatientIdView } from "./views/StaffPatientIdView";
+import { NewClinicalRecordView } from "./views/NewClinicalRecordView";
+import { StaffRecordsView } from "./views/StaffRecordsView";
+import { PatientSearchView } from "./views/PatientSearchView";
+import { PatientResultsView } from "./views/PatientResultsView";
+import { ClinicalRecordDetailView } from "./views/ClinicalRecordDetailView";
+import { seedDemoRecordsIfEmpty } from "./repositories/clinicalRecordRepository";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -33,9 +45,11 @@ interface StaffUser {
 }
 
 type Screen =
+export type Screen =
   | "home"
   | "staff-auth"
   | "staff-dashboard"
+  | "staff-patient-id"
   | "staff-new-record"
   | "staff-patient-id"
   | "staff-records"
@@ -1394,6 +1408,9 @@ export default function App() {
   const [prevScreen, setPrevScreen] = useState<Screen>("home");
 
   useEffect(() => { seedDemoData(); }, []);
+  useEffect(() => {
+    seedDemoRecordsIfEmpty();
+  }, []);
 
   const go = (next: Screen) => {
     setPrevScreen(screen);
@@ -1402,12 +1419,23 @@ export default function App() {
 
   if (screen === "home") {
     return <HomeScreen onStaff={() => go("staff-auth")} onPatient={() => go("patient-search")} />;
+    return (
+      <HomeView
+        onStaff={() => go(staffUser ? "staff-dashboard" : "staff-auth")}
+        onPatient={() => go("patient-search")}
+      />
+    );
   }
 
   if (screen === "staff-auth") {
     return (
       <StaffAuthScreen
         onSuccess={(u) => { setStaffUser(u); go("staff-dashboard"); }}
+      <StaffAuthView
+        onSuccess={(u) => {
+          setStaffUser(u);
+          go("staff-dashboard");
+        }}
         onBack={() => go("home")}
       />
     );
@@ -1416,10 +1444,15 @@ export default function App() {
   if (screen === "staff-dashboard" && staffUser) {
     return (
       <StaffDashboard
+      <StaffDashboardView
         staff={staffUser}
         onNewRecord={() => go("staff-patient-id")}
         onViewRecords={() => go("staff-records")}
         onLogout={() => { setStaffUser(null); go("home"); }}
+        onLogout={() => {
+          setStaffUser(null);
+          go("home");
+        }}
       />
     );
   }
@@ -1427,8 +1460,14 @@ export default function App() {
   if (screen === "staff-patient-id" && staffUser) {
     return (
       <StaffPatientIdScreen
+      <StaffPatientIdView
         staff={staffUser}
         onContinue={(d, n) => { setPendingPatientDoc(d); setPendingPatientName(n); go("staff-new-record"); }}
+        onContinue={(doc, name) => {
+          setPendingPatientDoc(doc);
+          setPendingPatientName(name);
+          go("staff-new-record");
+        }}
         onBack={() => go("staff-dashboard")}
       />
     );
@@ -1437,6 +1476,7 @@ export default function App() {
   if (screen === "staff-new-record" && staffUser) {
     return (
       <StaffNewRecordScreen
+      <NewClinicalRecordView
         staff={staffUser}
         patientDocument={pendingPatientDoc}
         patientName={pendingPatientName}
@@ -1451,6 +1491,13 @@ export default function App() {
       <StaffRecordsScreen
         onBack={() => go("staff-dashboard")}
         onView={(r) => { setSelectedRecord(r); setPrevScreen("staff-records"); go("patient-record-detail"); }}
+      <StaffRecordsView
+        onBack={() => go(staffUser ? "staff-dashboard" : "home")}
+        onView={(r) => {
+          setSelectedRecord(r);
+          setPrevScreen("staff-records");
+          go("patient-record-detail");
+        }}
       />
     );
   }
@@ -1459,6 +1506,12 @@ export default function App() {
     return (
       <PatientSearchScreen
         onResults={(d, records) => { setPatientSearchDoc(d); setPatientRecords(records); go("patient-results"); }}
+      <PatientSearchView
+        onResults={(doc, records) => {
+          setPatientSearchDoc(doc);
+          setPatientRecords(records);
+          go("patient-results");
+        }}
         onBack={() => go("home")}
       />
     );
@@ -1467,9 +1520,15 @@ export default function App() {
   if (screen === "patient-results") {
     return (
       <PatientResultsScreen
+      <PatientResultsView
         patientDoc={patientSearchDoc}
         records={patientRecords}
         onView={(r) => { setSelectedRecord(r); setPrevScreen("patient-results"); go("patient-record-detail"); }}
+        onView={(r) => {
+          setSelectedRecord(r);
+          setPrevScreen("patient-results");
+          go("patient-record-detail");
+        }}
         onBack={() => go("patient-search")}
       />
     );
@@ -1478,6 +1537,7 @@ export default function App() {
   if (screen === "patient-record-detail" && selectedRecord) {
     return (
       <RecordDetailScreen
+      <ClinicalRecordDetailView
         record={selectedRecord}
         onBack={() => go(prevScreen)}
       />
@@ -1485,4 +1545,10 @@ export default function App() {
   }
 
   return <HomeScreen onStaff={() => go("staff-auth")} onPatient={() => go("patient-search")} />;
+  return (
+    <HomeView
+      onStaff={() => go(staffUser ? "staff-dashboard" : "staff-auth")}
+      onPatient={() => go("patient-search")}
+    />
+  );
 }

@@ -3,4 +3,5 @@ export interface StaffUser {
   name: string;
   role: string;
   document: string;
+  email?: string;
 }
