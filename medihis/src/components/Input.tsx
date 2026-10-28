@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-
 export function Input({
   label,
   type = "text",
@@ -10,6 +9,8 @@ export function Input({
   required,
   hint,
   disabled,
+  error,
+  inputMode,
 }: {
   label: string;
   type?: string;
@@ -19,6 +20,8 @@ export function Input({
   required?: boolean;
   hint?: string;
   disabled?: boolean;
+  error?: string;
+  inputMode?: "none" | "text" | "decimal" | "numeric" | "tel" | "search" | "email" | "url";
 }) {
   const [focused, setFocused] = useState(false);
   return (
@@ -29,6 +32,7 @@ export function Input({
       </label>
       <input
         type={type}
+        inputMode={inputMode}
         value={value}
         disabled={disabled}
         onChange={(e) => onChange(e.target.value)}
@@ -37,7 +41,7 @@ export function Input({
         onBlur={() => setFocused(false)}
         style={{
           padding: "10px 14px",
-          border: `1.5px solid ${focused ? "var(--teal)" : "var(--border)"}`,
+          border: `1.5px solid ${error ? "var(--error)" : focused ? "var(--teal)" : "var(--border)"}`,
           borderRadius: 8,
           fontSize: 15,
           color: "var(--navy)",
@@ -47,7 +51,8 @@ export function Input({
           fontFamily: "inherit",
         }}
       />
-      {hint && <span style={{ fontSize: 12, color: "var(--muted)" }}>{hint}</span>}
+      {error && <span style={{ fontSize: 12, color: "var(--error)" }}>{error}</span>}
+      {hint && !error && <span style={{ fontSize: 12, color: "var(--muted)" }}>{hint}</span>}
     </div>
   );
 }

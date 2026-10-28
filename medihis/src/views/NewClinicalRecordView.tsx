@@ -6,6 +6,7 @@ import { Input, Textarea } from "../components/Input";
 import { PrimaryButton, GhostButton } from "../components/Button";
 import { ErrorMsg, SuccessMsg } from "../components/Feedback";
 import { useClinicalRecordViewModel } from "../viewmodels/useClinicalRecordViewModel";
+import { validateVitalSigns, type VitalSignsErrors } from "../utils/validateVitalSigns";
 import type { StaffUser } from "../models/StaffUser";
 
 export function NewClinicalRecordView({
@@ -34,11 +35,20 @@ export function NewClinicalRecordView({
   const [hr, setHr] = useState("");
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
+  const [vitalErrors, setVitalErrors] = useState<VitalSignsErrors>({});
 
   const handleSave = async () => {
     setError("");
     if (!chiefComplaint.trim() || !diagnosis.trim() || !treatment.trim()) {
       setError("Complete al menos el motivo de consulta, diagnóstico y tratamiento.");
+      return;
+    }
+
+    const errors = validateVitalSigns({ temp, bp, hr, weight, height });
+    setVitalErrors(errors);
+
+    if (Object.keys(errors).length > 0) {
+      setError("Por favor corrija los errores en los signos vitales antes de guardar.");
       return;
     }
 
@@ -133,32 +143,66 @@ export function NewClinicalRecordView({
               <Input
                 label="Temperatura (°C)"
                 value={temp}
-                onChange={setTemp}
+                onChange={(val) => {
+                  setTemp(val);
+                  if (vitalErrors.temp) {
+                    setVitalErrors((prev) => ({ ...prev, temp: undefined }));
+                  }
+                }}
                 placeholder="36.8"
+                inputMode="decimal"
+                error={vitalErrors.temp}
               />
               <Input
                 label="T/A (mmHg)"
                 value={bp}
-                onChange={setBp}
+                onChange={(val) => {
+                  setBp(val);
+                  if (vitalErrors.bp) {
+                    setVitalErrors((prev) => ({ ...prev, bp: undefined }));
+                  }
+                }}
                 placeholder="120/80"
+                error={vitalErrors.bp}
               />
               <Input
                 label="Frec. cardíaca (lpm)"
                 value={hr}
-                onChange={setHr}
+                onChange={(val) => {
+                  setHr(val);
+                  if (vitalErrors.hr) {
+                    setVitalErrors((prev) => ({ ...prev, hr: undefined }));
+                  }
+                }}
                 placeholder="72"
+                inputMode="numeric"
+                error={vitalErrors.hr}
               />
               <Input
                 label="Peso (kg)"
                 value={weight}
-                onChange={setWeight}
+                onChange={(val) => {
+                  setWeight(val);
+                  if (vitalErrors.weight) {
+                    setVitalErrors((prev) => ({ ...prev, weight: undefined }));
+                  }
+                }}
                 placeholder="70"
+                inputMode="decimal"
+                error={vitalErrors.weight}
               />
               <Input
                 label="Talla (cm)"
                 value={height}
-                onChange={setHeight}
+                onChange={(val) => {
+                  setHeight(val);
+                  if (vitalErrors.height) {
+                    setVitalErrors((prev) => ({ ...prev, height: undefined }));
+                  }
+                }}
                 placeholder="168"
+                inputMode="decimal"
+                error={vitalErrors.height}
               />
             </div>
           </Card>
