@@ -7,6 +7,7 @@ import {
   getCurrentStaffProfile,
   subscribeToAuthState,
 } from "../services/authService";
+import { validatePassword } from "../utils/validatePassword";
 
 export function useStaffAuthViewModel() {
   const [currentUser, setCurrentUser] = useState<StaffUser | null>(null);
@@ -87,13 +88,14 @@ export function useStaffAuthViewModel() {
     setError("");
 
     try {
-      if (!name.trim() || !document.trim() || !password.trim()) {
+      if (!name.trim() || !document.trim() || !password) {
         setError("Todos los campos obligatorios deben ser diligenciados.");
         return null;
       }
 
-      if (password.trim().length < 6) {
-        setError("La contraseña debe tener al menos 6 caracteres.");
+      const passwordError = validatePassword(password);
+      if (passwordError) {
+        setError(passwordError);
         return null;
       }
 
