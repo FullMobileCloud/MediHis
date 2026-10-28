@@ -1,0 +1,42 @@
+type User @table {
+  email: String!
+  fullName: String!
+  dob: Date
+  bloodType: String
+}
+
+type HealthRecord @table {
+  title: String!
+  category: String!
+  date: Date!
+  description: String
+  documentUrl: String
+  user: User!
+}
+
+type Medication @table {
+  name: String!
+  dosage: String!
+  frequency: String!
+  startDate: Date
+  endDate: Date
+  notes: String
+  user: User!
+}
+
+type HealthMetric @table {
+  metricName: String!
+  value: Float!
+  recordedAt: Timestamp!
+  unit: String
+  notes: String
+  user: User!
+}
+
+type ShareLink @table {
+  expiresAt: Timestamp!
+  # sharedRecordIds stored as a list of UUIDs
+  sharedRecordIds: [UUID]
+  recipientEmail: String
+  user: User!
+}

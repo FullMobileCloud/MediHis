@@ -1,0 +1,96 @@
+mutation CreateSeedData @transaction {
+  user_insertMany(data: [
+    {
+      id: "77d248b2-5f34-4a4d-847e-85a975765671",
+      email: "alice@example.com",
+      fullName: "Alice Smith"
+    },
+    {
+      id: "77d248b2-5f34-4a4d-847e-85a975765672",
+      email: "bob@example.com",
+      fullName: "Bob Jones"
+    },
+    {
+      id: "77d248b2-5f34-4a4d-847e-85a975765673",
+      email: "charlie@example.com",
+      fullName: "Charlie Brown"
+    }
+  ])
+  healthRecord_insertMany(data: [
+    {
+      title: "Annual Physical",
+      category: "Checkup",
+      date: "2023-01-15",
+      user: {id: "77d248b2-5f34-4a4d-847e-85a975765671"}
+    },
+    {
+      title: "Dental Cleaning",
+      category: "Dentist",
+      date: "2023-02-10",
+      user: {id: "77d248b2-5f34-4a4d-847e-85a975765672"}
+    },
+    {
+      title: "Vision Exam",
+      category: "Optometrist",
+      date: "2023-03-05",
+      user: {id: "77d248b2-5f34-4a4d-847e-85a975765673"}
+    }
+  ])
+  medication_insertMany(data: [
+    {
+      name: "Multivitamin",
+      dosage: "1 tablet",
+      frequency: "Daily",
+      user: {id: "77d248b2-5f34-4a4d-847e-85a975765671"}
+    },
+    {
+      name: "Ibuprofen",
+      dosage: "200mg",
+      frequency: "As needed",
+      user: {id: "77d248b2-5f34-4a4d-847e-85a975765672"}
+    },
+    {
+      name: "Vitamin D",
+      dosage: "5000 IU",
+      frequency: "Weekly",
+      user: {id: "77d248b2-5f34-4a4d-847e-85a975765673"}
+    }
+  ])
+  healthMetric_insertMany(data: [
+    {
+      metricName: "Heart Rate",
+      value: 72.0,
+      recordedAt: "2023-05-01T08:00:00Z",
+      user: {id: "77d248b2-5f34-4a4d-847e-85a975765671"}
+    },
+    {
+      metricName: "Weight",
+      value: 175.5,
+      recordedAt: "2023-05-01T08:05:00Z",
+      user: {id: "77d248b2-5f34-4a4d-847e-85a975765672"}
+    },
+    {
+      metricName: "Blood Pressure",
+      value: 120.0,
+      recordedAt: "2023-05-01T08:10:00Z",
+      user: {id: "77d248b2-5f34-4a4d-847e-85a975765673"}
+    }
+  ])
+  shareLink_insertMany(data: [
+    {
+      expiresAt: "2024-01-01T00:00:00Z",
+      recipientEmail: "doc@clinic.com",
+      user: {id: "77d248b2-5f34-4a4d-847e-85a975765671"}
+    },
+    {
+      expiresAt: "2024-06-01T00:00:00Z",
+      recipientEmail: "family@home.com",
+      user: {id: "77d248b2-5f34-4a4d-847e-85a975765672"}
+    },
+    {
+      expiresAt: "2025-01-01T00:00:00Z",
+      recipientEmail: "specialist@hospital.com",
+      user: {id: "77d248b2-5f34-4a4d-847e-85a975765673"}
+    }
+  ])
+}
